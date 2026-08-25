@@ -40,7 +40,9 @@ COPY --from=build /app/public/build ./public/build
 
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views \
     storage/logs storage/app/public bootstrap/cache \
-    && chown -R www-data:www-data /var/www/html
+    && chown -R www-data:www-data /var/www/html \
+    && find public -type d -exec chmod 755 {} \; \
+    && find public -type f -exec chmod 644 {} \;
 
 COPY docker/nginx-site.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
