@@ -21,7 +21,7 @@ RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --opt
 # ---------- Stage 3: runtime image (php-fpm + nginx via supervisord) ----------
 FROM php:8.3-fpm-alpine
 
-RUN apk add --no-cache nginx supervisor sqlite-libs $PHPIZE_DEPS icu-dev oniguruma-dev libzip-dev libpng-dev \
+RUN apk add --no-cache nginx supervisor sqlite-dev $PHPIZE_DEPS icu-dev oniguruma-dev libzip-dev libpng-dev \
     && docker-php-ext-install pdo pdo_sqlite pdo_mysql bcmath intl zip opcache pcntl \
     && apk del $PHPIZE_DEPS
 
