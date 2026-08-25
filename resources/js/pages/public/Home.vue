@@ -1,10 +1,28 @@
-<template>
-  <div class="home">
-    <h1>Welcome to My Portfolio</h1>
-    <p>This is the home page of my portfolio website.</p>
-  </div>
-</template>
+<script setup>
+import PortfolioLayout from '@/layouts/PortfolioLayout.vue';
+import Hero from '@/components/portfolio/Hero.vue';
+import TrustedBy from '@/components/portfolio/TrustedBy.vue';
+import AboutMe from '@/components/portfolio/AboutMe.vue';
+import FeaturedProjects from '@/components/portfolio/FeaturedProjects.vue';
+import BlogAndSkills from '@/components/portfolio/BlogAndSkills.vue';
+import CtaBanner from '@/components/portfolio/CtaBanner.vue';
 
-<script setup lang="ts">
-// You can add your JavaScript logic here if needed
+defineOptions({ layout: PortfolioLayout });
+
+defineProps({
+  profile: Object,
+  trustedBy: Array,
+  projects: Array,
+  posts: Array,
+  skills: Array,
+});
 </script>
+
+<template>
+  <Hero :profile="profile" />
+  <TrustedBy :logos="trustedBy" />
+  <AboutMe :profile="profile" />
+  <FeaturedProjects :projects="projects" />
+  <BlogAndSkills :posts="posts" :skills="skills" />
+  <CtaBanner />
+</template>
