@@ -4,9 +4,9 @@ set -e
 cd /var/www/html
 
 mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views \
-    storage/logs storage/app/public bootstrap/cache
-[ -f database/database.sqlite ] || touch database/database.sqlite
-chown -R www-data:www-data storage bootstrap/cache database
+    storage/logs storage/app/public storage/app/database bootstrap/cache
+[ -f storage/app/database/database.sqlite ] || touch storage/app/database/database.sqlite
+chown -R www-data:www-data storage bootstrap/cache
 
 php artisan config:cache
 php artisan route:cache
