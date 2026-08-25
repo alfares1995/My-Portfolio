@@ -3,7 +3,7 @@
 # ---------- Stage 1: install PHP deps + build frontend assets ----------
 # Needs PHP (not just Node) because the wayfinder vite plugin shells out to
 # `php artisan wayfinder:generate` during `npm run build`.
-FROM php:8.3-cli-alpine AS build
+FROM php:8.4-cli-alpine AS build
 RUN apk add --no-cache nodejs npm sqlite-dev $PHPIZE_DEPS icu-dev oniguruma-dev libzip-dev libpng-dev \
     && docker-php-ext-install pdo pdo_sqlite pdo_mysql bcmath intl zip mbstring \
     && apk del $PHPIZE_DEPS
@@ -16,7 +16,7 @@ RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --opt
 RUN npm install && npm run build
 
 # ---------- Stage 2: runtime image (php-fpm + nginx via supervisord) ----------
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 RUN apk add --no-cache nginx supervisor sqlite-dev $PHPIZE_DEPS icu-dev oniguruma-dev libzip-dev libpng-dev \
     && docker-php-ext-install pdo pdo_sqlite pdo_mysql bcmath intl zip mbstring opcache pcntl \
