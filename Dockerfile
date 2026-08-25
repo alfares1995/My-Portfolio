@@ -1,28 +1,25 @@
 # syntax=docker/dockerfile:1
 
-# ---------- Stage 1: build frontend assets (Vite) ----------
-FROM node:22-alpine AS frontend
+# ---------- Stage 1: install PHP deps + build frontend assets ----------
+# Needs PHP (not just Node) because the wayfinder vite plugin shells out to
+# `php artisan wayfinder:generate` during `npm run build`.
+FROM php:8.3-cli-alpine AS build
+RUN apk add --no-cache nodejs npm sqlite-dev $PHPIZE_DEPS icu-dev oniguruma-dev libzip-dev libpng-dev \
+    && docker-php-ext-install pdo pdo_sqlite pdo_mysql bcmath intl zip mbstring \
+    && apk del $PHPIZE_DEPS
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
 COPY . .
-RUN npm run build
-
-# ---------- Stage 2: install PHP dependencies ----------
-FROM composer:2 AS vendor
-WORKDIR /app
-COPY composer.json composer.lock ./
-COPY app ./app
-COPY bootstrap ./bootstrap
-COPY database ./database
-COPY artisan ./artisan
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views \
+    storage/logs storage/app/public bootstrap/cache
 RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts
+RUN npm install && npm run build
 
-# ---------- Stage 3: runtime image (php-fpm + nginx via supervisord) ----------
+# ---------- Stage 2: runtime image (php-fpm + nginx via supervisord) ----------
 FROM php:8.3-fpm-alpine
 
 RUN apk add --no-cache nginx supervisor sqlite-dev $PHPIZE_DEPS icu-dev oniguruma-dev libzip-dev libpng-dev \
-    && docker-php-ext-install pdo pdo_sqlite pdo_mysql bcmath intl zip opcache pcntl \
+    && docker-php-ext-install pdo pdo_sqlite pdo_mysql bcmath intl zip mbstring opcache pcntl \
     && apk del $PHPIZE_DEPS
 
 # Reasonable production PHP/opcache defaults (uploads used for project/thumbnail images)
@@ -38,8 +35,8 @@ RUN { \
 WORKDIR /var/www/html
 
 COPY . .
-COPY --from=vendor /app/vendor ./vendor
-COPY --from=frontend /app/public/build ./public/build
+COPY --from=build /app/vendor ./vendor
+COPY --from=build /app/public/build ./public/build
 
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views \
     storage/logs storage/app/public bootstrap/cache \
@@ -53,3 +50,4 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 8080
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
