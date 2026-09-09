@@ -42,17 +42,22 @@ class HomeController extends Controller
             ],
             'trustedBy' => [],
             'projects' => Project::query()
+                ->where('status', 'published')
                 ->with('technologies')
-                ->latest()
+                ->latest('completion_date')
                 ->take(6)
                 ->get()
                 ->map(fn (Project $project) => [
+                    'id' => $project->id,
                     'title' => $project->title,
-                    'description' => $project->short_description,
-                    'image' => $project->thumbnail_url,
-                    'tags' => $project->technologies->pluck('name'),
-                    'repoUrl' => $project->github_url,
-                    'liveUrl' => $project->live_url,
+                    'slug' => $project->slug,
+                    'shortDescription' => $project->short_description,
+                    'thumbnailUrl' => $project->thumbnail_url,
+                    'technologies' => $project->technologies->map(fn ($technology) => [
+                        'id' => $technology->id,
+                        'name' => $technology->name,
+                        'color' => $technology->color,
+                    ]),
                 ]),
             'posts' => BlogPost::query()
                 ->with(['category', 'tags'])

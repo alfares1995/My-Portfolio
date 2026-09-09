@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\AboutMe;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +42,20 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'profile' => function (): array {
+                $profile = AboutMe::query()->first();
+
+                return [
+                    'fullName' => $profile?->full_name ?? '',
+                    'githubUrl' => $profile?->github_username ? "https://github.com/{$profile->github_username}" : null,
+                    'phone' => $profile?->phone,
+                    'linkedinUrl' => $profile?->linkedin_url,
+                    'twitterUrl' => $profile?->twitter_url,
+                    'email' => $profile?->email,
+                    'location' => $profile?->location,
+                ];
+            },
+            'currentYear' => now()->year,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

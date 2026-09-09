@@ -16,22 +16,22 @@ const iconMap = { rocket: Rocket, heart: Heart, code: Code2, coffee: Coffee };
 
     <div>
       <span class="text-sm font-semibold uppercase tracking-wider text-violet-400">About Me</span>
-      <h2 class="mt-3 text-3xl font-bold text-white md:text-4xl">
+      <h2 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white md:text-4xl">
         Crafting Digital Experiences That Make Impact
       </h2>
-      <p class="mt-4 text-slate-400">
+      <p class="mt-4 text-slate-600 dark:text-slate-400">
         {{ profile.longBio }}
       </p>
 
       <div class="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-4">
         <div v-for="stat in profile.stats" :key="stat.label">
           <component :is="iconMap[stat.icon]" class="h-5 w-5 text-violet-400" />
-          <p class="mt-2 text-2xl font-bold text-white">{{ stat.value }}</p>
+          <p class="mt-2 text-2xl font-bold text-slate-950 dark:text-white">{{ stat.value }}</p>
           <p class="text-xs text-slate-500">{{ stat.label }}</p>
         </div>
       </div>
 
-      <a href="#about" class="mt-8 inline-flex items-center gap-1 text-sm font-medium text-violet-400 hover:text-violet-300">
+      <a href="/about" class="mt-8 inline-flex items-center gap-1 text-sm font-medium text-violet-400 hover:text-violet-300">
         Read More About Me →
       </a>
     </div>

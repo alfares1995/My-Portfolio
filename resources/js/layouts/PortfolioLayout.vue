@@ -13,12 +13,12 @@ defineProps({
 <template>
   <Head :title="title" />
 
-  <div class="min-h-screen bg-slate-950 font-sans text-slate-100 antialiased">
+  <div class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
     <NavBar />
 
     <!-- each page's own content goes here -->
     <slot />
 
-    <Footer :profile="page.props.profile" />
+    <Footer :profile="page.props.profile" :current-year="page.props.currentYear" />
   </div>
 </template>

@@ -22,8 +22,8 @@ defineProps({
         <article v-for="post in posts" :key="post.title">
           <img :src="post.image" :alt="post.title" class="h-32 w-full rounded-xl object-cover" />
           <p class="mt-3 text-xs text-slate-500">{{ post.date }}</p>
-          <h3 class="mt-1 font-semibold leading-snug text-white">{{ post.title }}</h3>
-          <p class="mt-2 line-clamp-2 text-sm text-slate-400">{{ post.excerpt }}</p>
+          <h3 class="mt-1 font-semibold leading-snug text-slate-950 dark:text-white">{{ post.title }}</h3>
+          <p class="mt-2 line-clamp-2 text-sm text-slate-600 dark:text-slate-400">{{ post.excerpt }}</p>
           <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
             <span>{{ post.readTime }}</span>
             <a :href="post.url" class="text-violet-400 hover:text-violet-300">→</a>
@@ -39,10 +39,10 @@ defineProps({
       <div class="mt-6 space-y-5">
         <div v-for="skill in skills" :key="skill.name">
           <div class="mb-1.5 flex justify-between text-sm">
-            <span class="text-slate-200">{{ skill.name }}</span>
-            <span class="text-slate-400">{{ skill.level }}%</span>
+            <span class="text-slate-800 dark:text-slate-200">{{ skill.name }}</span>
+            <span class="text-slate-600 dark:text-slate-400">{{ skill.level }}%</span>
           </div>
-          <div class="h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+          <div class="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-white/5">
             <div
               class="h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-400"
               :style="{ width: skill.level + '%' }"

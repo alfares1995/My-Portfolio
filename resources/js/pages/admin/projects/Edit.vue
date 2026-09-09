@@ -1,7 +1,6 @@
 <template>
 <Head :title="`Edit Project: ${project.title}`" />
 
-<AppLayout>
   <div>
     <h1>Edit Project</h1>
     <p>This is the Edit Project page for the admin section.</p>
@@ -76,21 +75,21 @@
         </FormItem>
       </FormField>
 
-      <FormItem v-if="project.images.length > 0">
-        <FormLabel>Existing Gallery Images</FormLabel>
+      <div v-if="project.images.length > 0" class="space-y-2">
+        <p class="text-sm font-medium">Existing Gallery Images</p>
         <div class="flex flex-wrap gap-4">
           <label v-for="image in project.images" :key="image.id" class="relative flex flex-col items-center gap-1 text-sm">
             <img :src="image.image_url ?? ''" alt="Gallery image" class="h-20 w-28 rounded object-cover">
             <span class="flex items-center gap-1">
               <Checkbox
                 :model-value="deleteImageIds.includes(image.id)"
-                @update:model-value="(checked) => toggleDeleteImage(image.id, checked)"
+                @update:model-value="(checked) => toggleDeleteImage(image.id, checked === true)"
               />
               Delete
             </span>
           </label>
         </div>
-      </FormItem>
+      </div>
 
       <FormField v-slot="{ handleChange, handleBlur }" name="images">
         <FormItem>
@@ -197,7 +196,6 @@
       <Button type="submit" :disabled="processing">Save Changes</Button>
     </Form>
   </div>
-</AppLayout>
 </template>
 
 <script setup lang="ts">
